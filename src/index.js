@@ -97,7 +97,7 @@ function setUpMovieDetails(movie) {
       // Decrease remaining tickets count
       remainingTickets.textContent = parseInt(remainingTickets.textContent, 10) - 1;
       // Update tickets sold on the server
-      fetch('${URL}/films/${movie.id}', {
+      fetch(`${URL}/films/${movie.id}`, {
         method: 'PATCH',
         headers:{
           'Content-Type': 'application/json',
