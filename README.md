@@ -1,8 +1,11 @@
 # Flatdango
-
 Flatiron Movie Theater is open for business! You will be building out an
 application, Flatdango, that allows a user to purchase movie tickets from the
 theater.
+
+ 
+ [live URL](https://imcollins.github.io/Code-challenge-3/)
+
 
 ## Demo
 
