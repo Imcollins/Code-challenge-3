@@ -1,17 +1,17 @@
 //initialize movies list after the DOM content is loaded
- document.addEventListener('DOMContentLoaded', () => {
+ document.addEventListener('DOMContentLoaded', () => { 
 
+ //locate the HTML element containing movie information
   const movieList = document.getElementById('films');
-  //locate the HTML element containing movie information
-
+  
+//initialize an empty array to store movie data
   let movieData = [];
-  // Declare an empty array called 'movieData' to store information about movies.
-
+  
   function fetchMoviesFromDB() {
       // This function fetches movie data from a file named 'db.json'.
       fetch('db.json')
           .then(response => {
-              // Check if the fetch operation was successful.
+              // Ensure the fetch operation is successful before proceeding
               if (!response.ok) {
                   throw new Error('Error fetching movies from db.json');
               }
@@ -21,7 +21,7 @@
           .then(data => {
               // After converting the response to JSON, store the movie data in the 'movieData' array.
               movieData = data.films;
-              // Then, call the 'displayMovies' function to show the movies on the webpage.
+              // Display movies on the webpage
               displayMovies();
           })
           .catch(error => {
