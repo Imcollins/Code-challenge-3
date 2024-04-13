@@ -24,7 +24,7 @@ function fetchMovieDetails(url) {
 
 // Function to fetch all movies from the server
 function fetchMovies(url) {
-    fetch(`${url}/films`)
+    fetch('${url}/films')
       .then((resp) => resp.json())
       .then((movies) => {
         // For each movie, display it
@@ -75,14 +75,14 @@ function setUpMovieDetails(movie) {
   const movieTitle = document.querySelector('#title');
   movieTitle.textContent= movie.title;
 
-  const movieTime = document.querySelector(`#runtime`);
+  const movieTime = document.querySelector('#runtime');
   // Set movie runtime in minutes
-  movieTime.textContent = `${movie.runtime} minutes`;}
+  movieTime.textContent = '${movie.runtime} minutes';}
 
-  const movieDescription = document.querySelector(`#film-info`);
+  const movieDescription = document.querySelector('#film-info');
   movieDescription.textContent = movie.description;
 
-  const showTime = document.querySelector(`#showtime`);
+  const showTime = document.querySelector('#showtime');
   showTime.textContent = movie.showtime;
 
   const remainingTickets = document.querySelector('#ticket-num');
@@ -97,7 +97,7 @@ function setUpMovieDetails(movie) {
       // Decrease remaining tickets count
       remainingTickets.textContent = parseInt(remainingTickets.textContent, 10) - 1;
       // Update tickets sold on the server
-      fetch(`${URL}/films/${movie.id}`, {
+      fetch('${URL}/films/${movie.id}', {
         method: 'PATCH',
         headers:{
           'Content-Type': 'application/json',
@@ -107,7 +107,7 @@ function setUpMovieDetails(movie) {
         }),
       });
       // Record ticket purchase
-      fetch(`${URL}/tickets`, {
+      fetch('${URL}/tickets', {
         method: 'POST',
         headers: {
           'Content-Type':'application/json',  
@@ -125,12 +125,12 @@ function setUpMovieDetails(movie) {
 
 // Functionality to delete a movie (Bonus)
 function deleteFilm(id) {
-  fetch (`${URL}/films/${id}`, {
+  fetch ('${URL}/films/${id}', {
     method: 'DELETE',
   })
     .then(() => {
       // Remove the movie from the DOM
-      const filmItem = document.querySelector(`#films li[data-id="${id}"]`);
+      const filmItem = document.querySelector('#films li[data-id="${id}"]');
       filmItem.remove();
     })
     .catch((error) => console.error('Error deleting film:',error));
