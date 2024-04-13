@@ -77,7 +77,7 @@ function setUpMovieDetails(movie) {
 
   const movieTime = document.querySelector('#runtime');
   // Set movie runtime in minutes
-  movieTime.textContent = '${movie.runtime} minutes';}
+  movieTime.textContent = `${movie.runtime} minutes`;}
 
   const movieDescription = document.querySelector('#film-info');
   movieDescription.textContent = movie.description;
