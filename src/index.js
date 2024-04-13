@@ -107,7 +107,7 @@ function setUpMovieDetails(movie) {
         }),
       });
       // Record ticket purchase
-      fetch('${URL}/tickets', {
+      fetch(`${URL}/tickets`, {
         method: 'POST',
         headers: {
           'Content-Type':'application/json',  
