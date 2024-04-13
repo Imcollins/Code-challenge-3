@@ -1,8 +1,8 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // Wait for the HTML document to be fully loaded before running the code inside.
+//initialize movies list after the DOM content is loaded
+ document.addEventListener('DOMContentLoaded', () => {
 
   const movieList = document.getElementById('films');
-  // Find the HTML element with the id 'films' and store it in the variable 'movieList'.
+  //locate the HTML element containing movie information
 
   let movieData = [];
   // Declare an empty array called 'movieData' to store information about movies.
