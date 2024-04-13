@@ -1,131 +1,132 @@
-// Base URL for the API
-const URL = 'http://localhost:3000';
-// Reference to the movie list element
-const movieList = document.getElementById('films');
-
-// When the DOM content is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  // Remove the first movie item from the list
-  document.querySelector('.film.item').remove();
-  // Fetch movie details and movies from the server
-  fetchMovieDetails(URL);
-  fetchMovies(URL);
-});
+  // Wait for the HTML document to be fully loaded before running the code inside.
 
-// Function to fetch details of a specific movie
-function fetchMovieDetails(url) {
-    fetch(`${url}/films/1`)
-      .then((response) => response.json())
-      .then((data) => {
-         // Set up details of the retrieved movie
-         setUpMovieDetails(data);
+  const movieList = document.getElementById('films');
+  // Find the HTML element with the id 'films' and store it in the variable 'movieList'.
+
+  let movieData = [];
+  // Declare an empty array called 'movieData' to store information about movies.
+
+  function fetchMoviesFromDB() {
+      // This function fetches movie data from a file named 'db.json'.
+      fetch('db.json')
+          .then(response => {
+              // Check if the fetch operation was successful.
+              if (!response.ok) {
+                  throw new Error('Error fetching movies from db.json');
+              }
+              // If successful, convert the response to JSON format.
+              return response.json();
+          })
+          .then(data => {
+              // After converting the response to JSON, store the movie data in the 'movieData' array.
+              movieData = data.films;
+              // Then, call the 'displayMovies' function to show the movies on the webpage.
+              displayMovies();
+          })
+          .catch(error => {
+              // If there's an error fetching the data, log the error and show an error message on the webpage.
+              console.error('Error fetching movies from db.json:', error);
+              showErrorMessage('Error loading movie data');
+          });
+  }
+
+  function displayMovies() {
+      // This function displays the list of movies on the webpage.
+      movieData.forEach(movie => {
+          // For each movie in the 'movieData' array, create a list item element.
+          const li = createMovieListItem(movie);
+          // Append the list item to the 'movieList' element on the webpage.
+          movieList.appendChild(li);
       });
-}
+  }
 
-// Function to fetch all movies from the server
-function fetchMovies(url) {
-    fetch(`${url}/films`)
-      .then((resp) => resp.json())
-      .then((movies) => {
-        // For each movie, display it
-        movies.forEach((movie) => {
-           displayMovie(movie);
-        });
-      });
-}
+  function createMovieListItem(movie) {
+      // This function creates a list item element for a movie.
+      const li = document.createElement('li');
+      // Set the text content of the list item to the title of the movie.
+      li.textContent = movie.title;
+      // Add a custom attribute to the list item to store the movie's ID.
+      li.dataset.movieId = movie.id;
+      // Add CSS classes to style the list item.
+      li.classList.add('film', 'item');
+      // Add a click event listener to the list item to show details about the movie when clicked.
+      li.addEventListener('click', () => updateMovieDetails(movie.id));
+      // Return the created list item.
+      return li;
+  }
 
-// Function to display a single movie
-function displayMovie(movie) {
-    // Create a list item element
-    const list = document.createElement('li');
-    list.classList.add('film', 'item'); 
-    list.style.cursor = 'pointer';
-    list.textContent = movie.title;
-    list.dataset.id  = movie.id;
+  function updateMovieDetails(movieId) {
+      // This function updates the movie details section when a movie is clicked.
+      const movie = movieData.find(m => m.id === movieId);
+      // If the movie is not found, stop the function.
+      if (!movie) return;
 
-    // Create a delete button for the movie
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete';
-    deleteButton.classList.add('delete-btn');
-    list.appendChild(deleteButton);
+      // Calculate the number of available tickets for the movie.
+      const availableTickets = movie.capacity - movie.tickets_sold;
+      // Find the 'buy-ticket' button on the webpage.
+      const buyTicketButton = document.getElementById('buy-ticket');
 
-    // Append the movie item to the movie list
-    movieList.appendChild(list);
+      // Set the text content of the 'buy-ticket' button based on the availability of tickets.
+      buyTicketButton.textContent = availableTickets > 0 ? 'Buy Ticket' : 'Sold Out';
+      // Toggle the 'disabled' class of the 'buy-ticket' button based on ticket availability.
+      buyTicketButton.classList.toggle('disabled', availableTickets === 0);
+      // Add an event listener to the 'buy-ticket' button to handle ticket purchases.
+      buyTicketButton.onclick = () => {
+          if (availableTickets > 0) {
+              buyTicket(movie);
+          }
+      };
 
-    // Add event listener for delete button
-    deleteButton.addEventListener('click', (event) => {
-      event.stopPropagation();
-      const confirmDelete = confirm('Are you sure you want to delete this movie?');
-      if(confirmDelete){
-        deleteFilm(movie.id);
-      }
-    });
+      // Update the movie details section with information about the clicked movie.
+      displayMovieDetails(movie);
+  }
 
-    // Check if movie is sold out and update the list item accordingly
-    if (movie.tickets_sold >= movie.capacity) {
-      list.classList.add('sold', 'out');
-    }
-}
+  function buyTicket(movie) {
+      // This function simulates buying a ticket for a movie.
+      movie.tickets_sold++;
+      // Update the ticket count display on the webpage.
+      updateTicketCount(movie.id);
+      // Update the movie details section with the latest ticket information.
+      updateMovieDetails(movie.id);
+  }
 
-// Function to set up details of a specific movie
-function setUpMovieDetails(movie) {
-  const preview = document.getElementById('poster');
-  preview.src = movie.poster;
+  function updateTicketCount(movieId) {
+      // This function updates the displayed number of available tickets for a movie.
+      const movie = movieData.find(m => m.id === movieId);
+      // Calculate the number of available tickets for the movie.
+      const availableTickets = movie.capacity - movie.tickets_sold;
+      // Update the ticket count display on the webpage.
+      document.getElementById('ticket-num').textContent = availableTickets;
+  }
 
-  const movieTitle = document.querySelector('#title');
-  movieTitle.textContent= movie.title;
+  function displayMovieDetails(movie) {
+      // This function displays details about a movie in the movie details section on the webpage.
+      document.getElementById('title').textContent = movie.title;
+      document.getElementById('runtime').textContent = `${movie.runtime} minutes;`
+      document.getElementById('film-info').textContent = movie.description;
+      document.getElementById('showtime').textContent = movie.showtime;
+      document.getElementById('poster').src = movie.poster;
+      document.getElementById('poster').alt = Poster `${movie.title};`
+      // Update the ticket count display for the movie.
+      updateTicketCount(movie.id);
+  }
 
-  const movieTime = document.querySelector('#runtime');
-  // Set movie runtime in minutes
-  movieTime.textContent = `${movie.runtime} minutes`;}
+  function showErrorMessage(message) {
+      // This function displays an error message on the webpage.
+      const errorMessage = document.createElement('div');
+      errorMessage.textContent = message;
+      errorMessage.classList.add('ui', 'negative', 'message');
+      document.body.appendChild(errorMessage);
+      // Set a timeout to remove the error message after 5 seconds.
+      setTimeout(() => errorMessage.remove(), 5000);
+  }
 
-  const movieDescription = document.querySelector('#film-info');
-  movieDescription.textContent = movie.description;
-
-  const showTime = document.querySelector('#showtime');
-  showTime.textContent = movie.showtime;
-
-  const remainingTickets = document.querySelector('#ticket-num');
-  // Calculate and display remaining tickets
-  remainingTickets.textContent = movie.capacity - movie.tickets_sold;
-
-  const buyTicketButton = document.getElementById('buy-ticket');
-  buyTicketButton.addEventListener('click', (event) => {
-    event.preventDefault();
-    // Check if tickets are available
-    if (parseInt(remainingTickets.textContent, 10) > 0){
-      // Decrease remaining tickets count
-      remainingTickets.textContent = parseInt(remainingTickets.textContent, 10) - 1;
-      // Update tickets sold on the server
-      fetch(`${URL}/films/${movie.id}`, {
-        method: 'PATCH',
-        headers:{
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          tickets_sold: movie.tickets_sold + 1,
-        }),
-      });
-      // Record ticket purchase
-      fetch(`${URL}/tickets`, {
-        method: 'POST',
-        headers: {
-          'Content-Type':'application/json',  
-        },
-        body: JSON.stringify({
-          film_id: movie.id,
-          number_of_tickets: 1,
-        }),
-      });
-    } else {
-      buyTicketButton.textContent = 'Sold Out';
-    }
-  });
-
-
+  // Call the fetchMoviesFromDB function to fetch movie data when the DOM content is fully loaded.
+  fetchMoviesFromDB();
 // Functionality to delete a movie (Bonus)
 function deleteFilm(id) {
-  fetch (`${URL}/films/${id}`, {
+  fetch ('${URL}/films/${id}', {
     method: 'DELETE',
   })
     .then(() => {
@@ -135,3 +136,5 @@ function deleteFilm(id) {
     })
     .catch((error) => console.error('Error deleting film:',error));
 }
+
+});
