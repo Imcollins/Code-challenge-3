@@ -25,7 +25,7 @@
               displayMovies();
           })
           .catch(error => {
-              // If there's an error fetching the data, log the error and show an error message on the webpage.
+              // Handle errors in fetching movie data
               console.error('Error fetching movies from db.json:', error);
               showErrorMessage('Error loading movie data');
           });
