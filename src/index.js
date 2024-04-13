@@ -125,7 +125,7 @@ function setUpMovieDetails(movie) {
 
 // Functionality to delete a movie (Bonus)
 function deleteFilm(id) {
-  fetch ('${URL}/films/${id}', {
+  fetch (`${URL}/films/${id}`, {
     method: 'DELETE',
   })
     .then(() => {
