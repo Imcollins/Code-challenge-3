@@ -24,7 +24,7 @@ function fetchMovieDetails(url) {
 
 // Function to fetch all movies from the server
 function fetchMovies(url) {
-    fetch('${url}/films')
+    fetch(`${url}/films`)
       .then((resp) => resp.json())
       .then((movies) => {
         // For each movie, display it
